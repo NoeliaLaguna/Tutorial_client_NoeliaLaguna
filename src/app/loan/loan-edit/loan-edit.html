@@ -1,0 +1,97 @@
+<div class="container">
+
+  @if (loan.id) {
+    <h1>Modificar préstamo</h1>
+  } @else {
+    <h1>Crear préstamo</h1>
+  }
+
+  <form>
+
+
+    <mat-form-field>
+      <mat-label>Identificador</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="Identificador"
+        [(ngModel)]="loan.id"
+        name="id"
+        disabled
+      >
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-label>Cliente</mat-label>
+      <mat-select
+        disableRipple
+        [(ngModel)]="loan.client.id"
+        name="clientId"
+        required
+      >
+        @for (client of clients; track client.id) {
+          <mat-option [value]="client.id">
+            {{ client.name }}
+          </mat-option>
+        }
+      </mat-select>
+      <mat-error>El cliente es obligatorio</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-label>Juego</mat-label>
+      <mat-select
+        disableRipple
+        [(ngModel)]="loan.game"
+        name="game"
+        required
+      >
+        @for (game of games; track game.id) {
+          <mat-option [value]="game">
+            {{ game.title }}
+          </mat-option>
+        }
+      </mat-select>
+      <mat-error>El juego es obligatorio</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-label>Fecha de inicio</mat-label>
+      <input
+        matInput
+        [matDatepicker]="startPicker"
+        [(ngModel)]="loan.startDate"
+        name="startDate"
+        required
+      >
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+      <mat-error>La fecha de inicio es obligatoria</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-label>Fecha de fin</mat-label>
+      <input
+        matInput
+        [matDatepicker]="endPicker"
+        [(ngModel)]="loan.endDate"
+        name="endDate"
+        required
+      >
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
+      <mat-error>La fecha de fin es obligatoria</mat-error>
+    </mat-form-field>
+
+  </form>
+
+  <div class="buttons">
+    <button mat-stroked-button (click)="onClose()">Cerrar</button>
+    <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+  </div>
+
+</div>
