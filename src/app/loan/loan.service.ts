@@ -40,7 +40,15 @@ export class LoanService {
   }
 
 
-  saveLoan(loan: Loan): Observable<void> {
+
+    saveLoan(loan: {
+      id?: number;
+      gameId: number;
+      clientId: number;
+      startDate: string;
+      endDate: string;
+    }): Observable<void>
+    {
     const { id } = loan;
     const url = id ? `${this.baseUrl}/${id}` : this.baseUrl;
     return this.http.put<void>(url, loan);

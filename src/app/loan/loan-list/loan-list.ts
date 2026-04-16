@@ -37,8 +37,6 @@ export const ES_DATE_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-``
-
 
 
 @Component({

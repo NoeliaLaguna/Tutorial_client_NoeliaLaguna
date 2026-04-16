@@ -16,4 +16,18 @@
             margin-left: 10px;
         }
     }
+
+    .dialog-content {
+    min-width: 400px;
+    }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+    mat-form-field {
+      width: 100%;
+    }
 }
