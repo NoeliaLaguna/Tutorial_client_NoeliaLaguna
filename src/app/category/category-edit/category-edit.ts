@@ -31,6 +31,9 @@ export class CategoryEdit implements OnInit {
 
 
     onSave() {
+
+        console.log('✅ DTO enviado al backend:', this.category);
+
         this.categoryService.saveCategory(this.category).subscribe(() => {
             this.dialogRef.close();
         });

@@ -13,22 +13,23 @@ export class LoanService {
 
   constructor(private http: HttpClient) {}
 
- getLoansPaged(
-  pageable: Pageable,
-  gameId?: number,
-  clientId?: number,
-  date?: Date
-) {
-  const body: any = {
-    pageable: pageable
-  };
+  getLoansPaged(
+    pageable: Pageable,
+    gameId?: number,
+    clientId?: number,
+    date?: Date
+  ): Observable<any> {
 
-  if (gameId) body.gameId = gameId;
-  if (clientId) body.clientId = clientId;
-  if (date) body.date = date.toISOString().substring(0, 10);
+    const body: any = {
+      pageable
+    };
 
-  return this.http.post<any>(this.baseUrl, body);
-}
+    if (gameId) body.gameId = gameId;
+    if (clientId) body.clientId = clientId;
+    if (date) body.date = date.toISOString().substring(0, 10);
+
+    return this.http.post<any>(this.baseUrl, body);
+  }
 
 
   getLoans(
@@ -36,23 +37,24 @@ export class LoanService {
     clientId?: number,
     date?: Date
   ): Observable<Loan[]> {
-    return this.http.get<Loan[]>(this.composeFindUrl(gameId, clientId, date));
+    return this.http.get<Loan[]>(
+      this.composeFindUrl(gameId, clientId, date)
+    );
   }
 
 
 
     saveLoan(loan: {
       id?: number;
-      gameId: number;
-      clientId: number;
-      startDate: string;
-      endDate: string;
-    }): Observable<void>
-    {
-    const { id } = loan;
-    const url = id ? `${this.baseUrl}/${id}` : this.baseUrl;
-    return this.http.put<void>(url, loan);
-  }
+      startDate: Date;
+      endDate: Date;
+      game: { id: number };
+      client: { id: number };
+    }): Observable<void>{
+        const { id } = loan;
+        const url = id ? `${this.baseUrl}/${id}` : this.baseUrl;
+        return this.http.put<void>(url, loan);
+      }
 
   deleteLoan(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
@@ -64,19 +66,12 @@ export class LoanService {
     clientId?: number | null,
     date?: Date | null
   ): string {
+
     const params = new URLSearchParams();
 
-    if (gameId) {
-      params.set('gameId', gameId.toString());
-    }
-
-    if (clientId) {
-      params.set('clientId', clientId.toString());
-    }
-
-    if (date) {
-      params.set('date', date.toISOString());
-    }
+    if (gameId) params.set('gameId', gameId.toString());
+    if (clientId) params.set('clientId', clientId.toString());
+    if (date) params.set('date', date.toISOString().substring(0, 10));
 
     const queryString = params.toString();
     return queryString ? `${this.baseUrl}?${queryString}` : this.baseUrl;

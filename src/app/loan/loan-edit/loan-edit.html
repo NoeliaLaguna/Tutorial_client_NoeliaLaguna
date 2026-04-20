@@ -1,82 +1,61 @@
-<h1 mat-dialog-title>
-  {{ loan.id ? 'Modificar préstamo' : 'Crear préstamo' }}
-</h1>
+<div class="container">
+    @if (loan.id) {
+        <h1>Modificar prestamo</h1>
+    } @else {
+        <h1>Crear prestamo</h1>
+    }
 
-<mat-dialog-content class="dialog-content">
+    <form>
+      <mat-form-field>
+        <mat-label>Identificador</mat-label>
+        <input matInput [(ngModel)]="loan.id" name="id" disabled />
+      </mat-form-field>
 
-  <form class="form">
+      <mat-form-field>
+        <mat-label>Cliente</mat-label>
+        <mat-select [(ngModel)]="loan.client.id" name="clientId" required>
+          <mat-option [value]="null">Seleccione cliente</mat-option>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Identificador</mat-label>
-      <input
-        matInput
-        [(ngModel)]="loan.id"
-        name="id"
-        disabled
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Cliente</mat-label>
-      <mat-select
-        [(ngModel)]="loan.client"
-        name="client"
-        required
-      >
-        @for (client of clients; track client.id) {
-          <mat-option [value]="client">
+          @for (client of clients; track client.id) {
+          <mat-option [value]="client.id">
             {{ client.name }}
           </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+          }
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Juego</mat-label>
-      <mat-select
-        [(ngModel)]="loan.game"
-        name="game"
-        required
-      >
-        @for (game of games; track game.id) {
-          <mat-option [value]="game">
+      <mat-form-field>
+        <mat-label>Juego</mat-label>
+        <mat-select [(ngModel)]="loan.game.id" name="gameId" required>
+          <mat-option [value]="null">Seleccione juego</mat-option>
+
+          @for (game of games; track game.id) {
+          <mat-option [value]="game.id">
             {{ game.title }}
           </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+          }
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Fecha de inicio</mat-label>
-      <input
-        matInput
-        [matDatepicker]="startPicker"
-        [(ngModel)]="loan.startDate"
-        name="startDate"
-        required
-      />
-      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-      <mat-datepicker #startPicker></mat-datepicker>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Fecha de inicio</mat-label>
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="loan.startDate" name="startDate" required />
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Fecha de fin</mat-label>
-      <input
-        matInput
-        [matDatepicker]="endPicker"
-        [(ngModel)]="loan.endDate"
-        name="endDate"
-        required
-      />
-      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-      <mat-datepicker #endPicker></mat-datepicker>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Fecha de fin</mat-label>
+        <input matInput [matDatepicker]="endPicker" [(ngModel)]="loan.endDate" name="endDate" required />
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+    </form>
 
-  </form>
 
-</mat-dialog-content>
+    <div class="buttons">
+        <button mat-stroked-button (click)="onClose()">Cerrar</button>
+        <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+    </div>
 
-<mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="onClose()">Cerrar</button>
-  <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
-</mat-dialog-actions>
+</div>

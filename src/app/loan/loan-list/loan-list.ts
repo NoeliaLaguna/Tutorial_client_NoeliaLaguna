@@ -27,9 +27,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 
 export const ES_DATE_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY',
-  },
+  parse: { dateInput: 'DD/MM/YYYY' },
   display: {
     dateInput: 'DD/MM/YYYY',
     monthYearLabel: 'MMMM YYYY',
@@ -38,72 +36,65 @@ export const ES_DATE_FORMATS = {
   },
 };
 
-
 @Component({
   selector: 'app-loan-list',
   standalone: true,
   imports: [
-CommonModule,
-  FormsModule,
-  MatTableModule,
-  MatPaginatorModule,
-  MatButtonModule,
-  MatIconModule,
-  MatFormFieldModule,
-  MatSelectModule,
-  MatInputModule,
-  MatDatepickerModule,
-  MatNativeDateModule
-],
+    CommonModule,
+    FormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
   providers: [
-      { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-      { provide: MAT_DATE_FORMATS, useValue: ES_DATE_FORMATS },
-      provideNativeDateAdapter()
-    ],
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
+    { provide: MAT_DATE_FORMATS, useValue: ES_DATE_FORMATS },
+    provideNativeDateAdapter()
+  ],
   templateUrl: './loan-list.html',
   styleUrl: './loan-list.scss',
 })
 export class LoanList implements OnInit {
 
-
   pageNumber = 0;
   pageSize = 5;
   totalElements = 0;
+
   games: Game[] = [];
   clients: Client[] = [];
 
-
   dataSource = new MatTableDataSource<Loan>();
   displayedColumns = ['id', 'game', 'client', 'startDate', 'endDate', 'action'];
-
 
   filterGame: Game;
   filterClient: Client;
   filterDate: Date;
 
- constructor(
-  private loanService: LoanService,
-  private gameService: GameService,
-  private clientService: ClientService,
-  public dialog: MatDialog
-) {}
+  constructor(
+    private loanService: LoanService,
+    private gameService: GameService,
+    private clientService: ClientService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-  this.gameService.getGames().subscribe(g => this.games = g);
-  this.clientService.getClients().subscribe(c => this.clients = c);
-  this.loadPage();
+    this.gameService.getGames().subscribe(g => (this.games = g));
+    this.clientService.getClients().subscribe(c => (this.clients = c));
+    this.loadPage();
   }
 
   loadPage(event?: PageEvent): void {
+
     const pageable: Pageable = {
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
-      sort: [
-        {
-          property: 'id',
-          direction: 'ASC',
-        },
-      ],
+      sort: [{ property: 'id', direction: 'ASC' }],
     };
 
     if (event) {
@@ -119,7 +110,13 @@ export class LoanList implements OnInit {
         this.filterDate
       )
       .subscribe(data => {
-        this.dataSource.data = data.content;
+
+        this.dataSource.data = data.content.map(loan => ({
+          ...loan,
+          startDate: new Date(loan.startDate),
+          endDate: new Date(loan.endDate),
+        }));
+
         this.pageNumber = data.pageable.pageNumber;
         this.pageSize = data.pageable.pageSize;
         this.totalElements = data.totalElements;
